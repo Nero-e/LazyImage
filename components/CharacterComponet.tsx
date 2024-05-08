@@ -15,32 +15,33 @@ type CharacterProps = {
 };
 
 const CharacterComponent = () => {
-  const [direction, setDirection] = useState("up");
+  const [characters, setCharacters] = useState<CharacterProps[]>([]);
+  const randomNumber = RandomNumber();
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  const fetchData = async () => {
+    try {
+      const randomNumber = RandomNumber();
+      const response = await getCharacter(randomNumber);
+      setCharacters((prevCharacters) => [...prevCharacters, response]);
+    } catch (error) {
+      console.error("Error al obtener el personaje:", error);
+    }
+  };
 
   const handleClick = () => {
-    setDirection(direction === "up" ? "down" : "up");
-  };
-  const [character, setCharacter] = useState<CharacterProps | null>(null);
-  const randomNumber = RandomNumber();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getCharacter(randomNumber);
-        setCharacter(response);
-      } catch (error) {
-        console.error("Error al obtener el personaje:", error);
-      }
-    };
-
     fetchData();
-  }, []);
+  };
 
   return (
     <>
       <main className="flex flex-col flex-grow w-full min-h-screen justify-center items-center mt-4 bg-black">
-        {character && (
-          <div className="flex flex-col max-w-[630px] w-full h-screen justify-center items-center bg-rich-black-1000">
-            <div className="flex flex-col max-w-[470px] w-full h-auto bg-rich-black-900">
+        {characters.map((character, index) => (
+          <div key={character.id + index} className="flex flex-col max-w-[630px] w-full h-auto justify-center items-center">
+            <div className="flex flex-col max-w-[470px] w-full h-auto ">
               <div className="flex flex-row justify-start items-center w-auto h-auto px-[14px] py-4 lg:pl-1 lg:pb-3 lg:pt-0">
                 <div className="flex flex-col mr-3">
                   <img
@@ -79,8 +80,8 @@ const CharacterComponent = () => {
                   </div>
                 </div>
                 <div className="flex flex-row justify-end">
-                <div className="p-2 m-0">
-                    <button onClick={() => console.log("hey")}>
+                  <div className="p-2 m-0">
+                    <button>
                       <BookmarkIcon className="w-6 h-6" />
                     </button>
                   </div>
@@ -88,7 +89,8 @@ const CharacterComponent = () => {
               </div>
             </div>
           </div>
-        )}
+        ))}
+        <button onClick={handleClick}>Botoncito</button>
       </main>
     </>
   );
