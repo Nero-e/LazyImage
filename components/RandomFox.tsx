@@ -1,11 +1,15 @@
-const Random = () => Math.floor(Math.random() * 123) + 1;
+import Image from "next/image";
 
-const RandomFox = ():JSX.Element => {   
+type PropsRandomFox = {
+    image: string
+}
+
+const RandomFox = ({image}: PropsRandomFox):JSX.Element => {   
     
     return (
         <>
             <h1>Random Fox</h1>
-            <p>Random number: {Random()}</p>
+            <Image alt="Imagen de zorro" src={image} width={320} height={320}/>
         </>
     )
 
